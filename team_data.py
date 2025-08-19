@@ -1,7 +1,18 @@
 import requests
 import pandas as pd
+import json
 
-def get_user_team_data():
+def get_current_gameweek():
+    fpl_current_season_data = 'https://fantasy.premierleague.com/api/bootstrap-static/'
+    response = requests.get(fpl_current_season_data)
+    data = response.json()
+
+    for gameweek_info in data['events']:
+        if gameweek_info['is_current']:
+            return gameweek_info['id']
+
+
+def get_user_team_data(manager_id):
 
     fpl_current_season_data = 'https://fantasy.premierleague.com/api/bootstrap-static/'
     response = requests.get(fpl_current_season_data)
@@ -27,7 +38,7 @@ def get_user_team_data():
             current_gameweek = gameweek['id']
             break
 
-    team_id = int(input("Please enter your team ID: "))
+    team_id = manager_id
 
     user_team_url = f'https://fantasy.premierleague.com/api/entry/{team_id}/event/{current_gameweek}/picks/'
     user_team = requests.get(user_team_url)
@@ -49,7 +60,34 @@ def get_user_team_data():
 
     user_team_string = sorted_user_team_df[['web_name', 'team_name', 'position', 'price', 'points_per_game_rank']].to_string(index=False)
 
-    print(user_team_string)
     return user_team_string
+
+
+def manager_summary(manager_id, current_gameweek):
+    manager_url = f'https://fantasy.premierleague.com/api/entry/{manager_id}/'
+    manager_data = requests.get(manager_url)
+
+    transfers_url = f' https://fantasy.premierleague.com/api/entry/{manager_id}/event/{current_gameweek-1}/picks/'
+    transfers_data = requests.get(transfers_url)
+
+    manager_json = json.loads(manager_data.text)
+
+    manager_name = manager_json['player_first_name']
+
+    transfers_json = json.loads(transfers_data.text)
+
+    last_gw_transfers = transfers_json['event_transfers']
+    chip_played = transfers_json['active_chip']
+
+    if (last_gw_transfers == 0 and chip_played == None):
+        no_free_transfers = 2
+    else:
+        no_free_transfers = 1
+
+
+    return manager_name, no_free_transfers
+
+
+
 
 

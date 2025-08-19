@@ -3,7 +3,7 @@ import google.generativeai as genai
 import json
 
 from get_data import get_data
-from team_data import get_user_team_data
+import team_data
 
 
 try:
@@ -12,16 +12,24 @@ except KeyError:
     print("no api key")
     exit()
 
-user_team = get_user_team_data()
+current_gameweek = get_current_gameweek()
+
+manager_id = int(input('Enter team ID: '))
+user_team = get_user_team_data(manager_id)
 
 
 summary_22_23, summary_23_24, top_players = get_data()
 
+manager_name, no_of_transfers = manager_summary(manager_id, current_gameweek)
+
 master_prompt = f"""
+Hello my name is {manager_name}.
 You are an expert Fantasy Premier League manager. Your task is to analyze the provided data and suggest the single best transfer for my team for the upcoming gameweek.
 
 Here is my current FPL team for the 25/26 season:
 {user_team}
+
+I currently have {no_of_transfers} free transfers and it is gameweek: {current_gameweek}
 
 The field points_per_game_rank is the players rank in number of points scored (the lower the better) so take this into account
 
@@ -34,7 +42,10 @@ Here is a summary of the top-performing players from the 23/24 season. Use this 
 Here is a summary of the top-performing players from the 22/23 season. Use this for additional historical context:
 {summary_22_23}
 
+Sadly the data for last season (24/25) was corrupt so it could not be used. Also just keep this in mind in making your decision.
+
 **TASK:**
+Greet {manager_name}.
 Based on all of the above data, suggest the single best transfer for my team.
 Your reasoning should be based on a player's proven historical performance, their current hot form, and their potential for the next match (ep_next).
 You MUST ignore any players from the historical data who are no longer in the Premier League (like Harry Kane). 
@@ -51,7 +62,7 @@ Format your final answer ONLY as a JSON object with the following structure:
 """
 
 
-print("\nSending data to the Gemini API for analysis.")
+print("\nUsing AI to calculate best transfer...")
 try:
     generation_config = genai.types.GenerationConfig(
         response_mime_type="application/json"
