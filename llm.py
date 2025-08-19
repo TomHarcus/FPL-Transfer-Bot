@@ -3,7 +3,7 @@ import google.generativeai as genai
 import json
 
 from get_data import get_data
-import team_data
+from team_data import get_current_gameweek, get_user_team_data, manager_summary
 
 
 try:
@@ -29,7 +29,12 @@ You are an expert Fantasy Premier League manager. Your task is to analyze the pr
 Here is my current FPL team for the 25/26 season:
 {user_team}
 
-I currently have {no_of_transfers} free transfers and it is gameweek: {current_gameweek}
+Always put more consideration and thought into transfers from players who are starting and not on the bench as most of the bench players will never get played and are there to make up the 100 million budget. This does not mean you can't
+recommend bench transfers though when absolutely necessary.
+
+I currently have {no_of_transfers} free transfers and the next gameweek is: {current_gameweek+1}
+
+Make sure to clearly state the number of free transfers they have aswell.
 
 The field points_per_game_rank is the players rank in number of points scored (the lower the better) so take this into account
 
@@ -46,18 +51,22 @@ Sadly the data for last season (24/25) was corrupt so it could not be used. Also
 
 **TASK:**
 Greet {manager_name}.
-Based on all of the above data, suggest the single best transfer for my team.
+Based on all of the above data, suggest the single best transfer or transfers (If it is needed and the player has 2 free transfers) for my team. You can also search the internet with Google for any injury related news or anything that might help in your analysis.
 Your reasoning should be based on a player's proven historical performance, their current hot form, and their potential for the next match (ep_next).
 You MUST ignore any players from the historical data who are no longer in the Premier League (like Harry Kane). 
 But assume all players in my current FPL team are playing in the Premier League (recognise your data cut off point as its now late 2025)
 Your final recommendation must only include players who are currently active in the Premier League.
 Both players have to be from the same position and be of similar price points as there is a 100 million budget.
 
-Format your final answer ONLY as a JSON object with the following structure:
+Format your final answer ONLY as a JSON object with the following structure. The "transfers" field MUST be a list, even if you are only recommending one transfer:
 {{
-  "player_to_sell": {{ "name": "Player Name" }},
-  "player_to_buy": {{ "name": "Player Name" }},
-  "justification": "Your detailed reasoning here."
+"transfers": [
+{{
+"player_to_sell": {{ "name": "Player Name" }},
+"player_to_buy": {{ "name": "Player Name" }}
+}}
+],
+"justification": "Your detailed reasoning here."
 }}
 """
 
@@ -69,14 +78,20 @@ try:
     )
     model = genai.GenerativeModel("gemini-2.5-flash", generation_config=generation_config)
     
-    response = model.generate_content(master_prompt)
+    response = model.generate_content([master_prompt])
     
     recommendation_json = json.loads(response.text)
 
     print(" FPL AI Transfer Recommendation")
     print("")
-    print(f"SELL:  {recommendation_json['player_to_sell']['name']}")
-    print(f"BUY:   {recommendation_json['player_to_buy']['name']}")
+
+    for transfer in recommendation_json['transfers']:
+        sell_player = transfer['player_to_sell']['name']
+        buy_player = transfer['player_to_buy']['name']
+        print(f"SELL: {sell_player}")
+        print(f"BUY:  {buy_player}")
+        print("-" * 20)
+
     print("\nAI Justification:")
     print(recommendation_json['justification'])
 
