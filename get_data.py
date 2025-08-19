@@ -1,6 +1,8 @@
 import pandas as pd
 import requests
+import streamlit as st
 
+@st.cache_data(ttl=3600)
 def get_data():
 
     fpl_current_season_data = 'https://fantasy.premierleague.com/api/bootstrap-static/'

@@ -1,7 +1,9 @@
 import requests
 import pandas as pd
 import json
+import streamlit as st
 
+@st.cache_data(ttl=3600)
 def get_current_gameweek():
     fpl_current_season_data = 'https://fantasy.premierleague.com/api/bootstrap-static/'
     response = requests.get(fpl_current_season_data)
@@ -12,6 +14,7 @@ def get_current_gameweek():
             return gameweek_info['id']
 
 
+@st.cache_data(ttl=3600)
 def get_user_team_data(manager_id):
 
     fpl_current_season_data = 'https://fantasy.premierleague.com/api/bootstrap-static/'
@@ -64,6 +67,7 @@ def get_user_team_data(manager_id):
         return error_message
 
 
+@st.cache_data(ttl=3600)
 def manager_summary(manager_id, current_gameweek):
     manager_url = f'https://fantasy.premierleague.com/api/entry/{manager_id}/'
     manager_data = requests.get(manager_url)
