@@ -48,7 +48,7 @@ def get_user_team_data(manager_id):
         user_team_df['team_name'] = user_team_df['team'].map(teams_map)
         user_team_df['price'] = user_team_df['now_cost'] / 10
         user_team_df['lineup_position'] = user_team_df['id'].map(id_to_lineup_position_map)
-        user_team_df['lineup_position'] = user_team_df['lineup_position'].fillna(99) # Handle missing values
+        user_team_df['lineup_position'] = user_team_df['lineup_position'].fillna(99) 
         user_team_df['status'] = user_team_df['lineup_position'].apply(
             lambda pos: 'Starting' if pos <= 11 else 'Benched'
         )

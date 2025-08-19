@@ -11,15 +11,6 @@ def get_ai_recommendation(user_team_string, top_players_string, summary_23_24, s
         print("no api key")
         exit()
 
-    #current_gameweek = get_current_gameweek()
-
-    #manager_id = int(input('Enter team ID: '))
-    #user_team = get_user_team_data(manager_id)
-
-
-    #summary_22_23, summary_23_24, top_players = get_data()
-
-    #manager_name, no_of_transfers = manager_summary(manager_id, current_gameweek)
 
     master_prompt = f"""
     Hello my name is {manager_name}.
