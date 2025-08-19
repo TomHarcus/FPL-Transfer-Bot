@@ -57,6 +57,8 @@ def get_ai_recommendation(user_team_string, top_players_string, summary_23_24, s
     Your final recommendation must only include players who are currently active in the Premier League.
     Both players have to be from the same position and be of similar price points as there is a 100 million budget.
 
+    ALSO explain what **ep_next** is when using it to justify.
+
     Format your final answer ONLY as a JSON object with the following structure. The "transfers" field MUST be a list, even if you are only recommending one transfer:
     {{
     "transfers": [
