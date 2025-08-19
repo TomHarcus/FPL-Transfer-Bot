@@ -49,7 +49,7 @@ def get_ai_recommendation(user_team_string, top_players_string, summary_23_24, s
     Sadly the data for last season (24/25) was corrupt so it could not be used. Also just keep this in mind in making your decision.
 
     **TASK:**
-    Greet {manager_name}.
+    Greet {manager_name}. But vary the greetings each time.
     Based on all of the above data, suggest the single best transfer or transfers (If it is needed and the player has 2 free transfers) for my team. You can also search the internet with Google for any injury related news or anything that might help in your analysis.
     Your reasoning should be based on a player's proven historical performance, their current hot form, and their potential for the next match (ep_next).
     You MUST ignore any players from the historical data who are no longer in the Premier League (like Harry Kane). 
