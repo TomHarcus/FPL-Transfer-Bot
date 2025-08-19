@@ -15,7 +15,7 @@ if 'manager_name' not in st.session_state:
 st.title("FPL AI Transfer Advisor")
 st.divider()
 
-manager_id_input = st.text_input("Enter your FPL Team ID:", placeholder="e.g., 5648784")
+manager_id_input = st.text_input("Enter your FPL Team ID:", placeholder="e.g., 12345678")
 
 if st.button("Get My Recommendation", type="primary", use_container_width=True):
     if manager_id_input:
