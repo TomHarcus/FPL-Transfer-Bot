@@ -18,16 +18,32 @@ st.divider()
 manager_id_input = st.text_input("Enter your FPL Team ID:", placeholder="e.g., 12345678")
 
 if st.button("Get My Recommendation", type="primary", use_container_width=True):
+    st.write("Debug: Button clicked. Entering logic block...")
+
     if manager_id_input:
+        st.write(f"Debug: Manager ID input found: {manager_id_input}")
         try:
             manager_id = int(manager_id_input)
+            st.write(f"Debug: Manager ID converted to int: {manager_id}")
             with st.spinner("Analyzing your team, historical data, and current form... This might take a moment."):
+                st.write("Debug: Getting current gameweek...")
                 current_gameweek = get_current_gameweek()
+                st.write(f"Debug: Current gameweek is: {current_gameweek}")
+
+                st.write("Debug: Getting user team data...")
                 user_team_string = get_user_team_data(manager_id)
+                st.write("Debug: User team data received.")
+
+                st.write("Debug: Getting historical data...")
                 summary_22_23, summary_23_24, top_players_string = get_data()
+                st.write("Debug: Historical data received.")
+
+                st.write("Debug: Getting manager summary...")
                 manager_name, no_of_transfers = manager_summary(manager_id, current_gameweek)
+                st.write(f"Debug: Manager: {manager_name}, Transfers: {no_of_transfers}")
                 
                 st.session_state.manager_name = manager_name 
+                st.write("Debug: All data loaded. Preparing to call AI...")
                 
                 if "Error" in user_team_string:
                     st.session_state.recommendation = {"error": user_team_string}
@@ -36,6 +52,7 @@ if st.button("Get My Recommendation", type="primary", use_container_width=True):
                         user_team_string, top_players_string, summary_23_24,
                         summary_22_23, manager_name, no_of_transfers, current_gameweek
                     )
+                    st.write("Debug: AI call complete. Recommendation stored in session state.")
         except ValueError:
             st.session_state.recommendation = {"error": "Please enter a valid, numerical Team ID."}
         except Exception as e:
@@ -48,9 +65,11 @@ if st.button("Get My Recommendation", type="primary", use_container_width=True):
 st.divider()
 
 if st.session_state.recommendation:
+    st.write("Debug: Display block entered. Recommendation found in session state.")
     recommendation = st.session_state.recommendation
     
     if "error" in recommendation:
+        st.error(f"**An error occurred:** {recommendation['error']}")
         st.error(f"**An error occurred:** {recommendation['error']}")
     else:
         st.success("Analysis Complete! Here is your recommendation:")
