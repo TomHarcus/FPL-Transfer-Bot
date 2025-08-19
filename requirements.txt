@@ -2,4 +2,8 @@ streamlit
 pandas
 requests
 beautifulsoup4
+<<<<<<< HEAD
 google-generativeai
+=======
+google-generativeai
+>>>>>>> 598498121e1a69d30f350d3844c51e45adcc89f9
