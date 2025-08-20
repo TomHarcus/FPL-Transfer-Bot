@@ -22,7 +22,7 @@ if st.button("Get My Recommendation", type="primary", use_container_width=True):
     if manager_id_input:
         try:
             manager_id = int(manager_id_input)
-            with st.spinner("Analyzing your team, historical data, and current form... This might take a moment."):
+            with st.spinner("Analyzing your team, historical data, and current form... This might take up to a minute."):
                 current_gameweek = get_current_gameweek()
 
                 user_team_string = get_user_team_data(manager_id)
