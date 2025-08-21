@@ -22,6 +22,8 @@ def get_ai_recommendation(user_team_string, top_players_string, summary_23_24, s
     Always put more consideration and thought into transfers from players who are starting and not on the bench as most of the bench players will never get played and are there to make up the 100 million budget. This does not mean you can't
     recommend bench transfers though when absolutely necessary.
 
+    Remember the team can only have a maximum of 3 players per team. E.g: Cannot have more than 3 Arsenal players.
+
     I currently have {no_of_transfers} free transfers and the next gameweek is: {current_gameweek+1}
 
     Make sure to clearly state the number of free transfers they have aswell.
